@@ -1,0 +1,154 @@
+.emergency-page {
+    background-color: #FDF4FF;
+    /* Very soft purple/pink tint */
+    min-height: calc(100vh - 64px);
+    padding: var(--spacing-8) 0;
+}
+
+.emergency-header {
+    text-align: center;
+    margin-bottom: var(--spacing-10);
+}
+
+.heart-icon {
+    color: #DB2777;
+    margin-bottom: var(--spacing-4);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.emergency-header h1 {
+    color: #831843;
+    margin-bottom: var(--spacing-2);
+}
+
+.emergency-header p {
+    color: #9D174D;
+    font-size: var(--font-size-lg);
+}
+
+.helpline-section h2,
+.safe-spaces-section h2 {
+    color: #831843;
+    margin-bottom: var(--spacing-6);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+}
+
+.helpline-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-4);
+    margin-bottom: var(--spacing-10);
+}
+
+@media (min-width: 640px) {
+    .helpline-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.helpline-card {
+    text-align: center;
+    border-top: 4px solid #DB2777 !important;
+}
+
+.helpline-icon {
+    color: #DB2777;
+    margin-bottom: var(--spacing-3);
+    width: 32px;
+    height: 32px;
+}
+
+.helpline-number {
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    color: var(--neutral-gray-900);
+    margin: var(--spacing-2) 0 var(--spacing-4);
+}
+
+.btn-call {
+    background-color: #FCE7F3 !important;
+    color: #9D174D !important;
+}
+
+.btn-call:hover {
+    background-color: #FBCFE8 !important;
+}
+
+/* Safe Spaces */
+.spaces-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-4);
+}
+
+.space-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-4);
+}
+
+.space-info h3 {
+    font-size: var(--font-size-base);
+    color: var(--neutral-gray-900);
+    margin-bottom: var(--spacing-1);
+}
+
+.space-info p {
+    color: var(--neutral-gray-600);
+    font-size: var(--font-size-sm);
+}
+
+.space-details {
+    display: flex;
+    gap: var(--spacing-3);
+    align-items: center;
+}
+
+.space-badge {
+    background-color: #E0E7FF;
+    color: #3730A3;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+}
+
+.space-security {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--secondary-green-dark);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+}
+
+.calm-message {
+    text-align: center;
+    margin-top: var(--spacing-12);
+    padding: 0 var(--spacing-4);
+}
+
+.calm-message p {
+    font-family: serif;
+    font-style: italic;
+    font-size: var(--font-size-xl);
+    color: #831843;
+}

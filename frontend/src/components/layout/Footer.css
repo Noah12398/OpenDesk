@@ -1,0 +1,125 @@
+.footer {
+    background-color: var(--neutral-gray-50);
+    border-top: 1px solid var(--neutral-gray-200);
+    padding: var(--spacing-8) 0 var(--spacing-4);
+    margin-top: auto;
+}
+
+.footer-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-8);
+}
+
+.footer-main {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-6);
+}
+
+.footer-brand h3 {
+    color: var(--primary-blue);
+    margin-bottom: var(--spacing-2);
+}
+
+.tagline {
+    color: var(--neutral-gray-600);
+    width: 100%;
+}
+
+.footer-links h4 {
+    margin-bottom: var(--spacing-3);
+    color: var(--neutral-gray-800);
+}
+
+.footer-links ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+}
+
+.footer-links a {
+    color: var(--neutral-gray-600);
+    font-size: var(--font-size-sm);
+}
+
+.footer-links a:hover {
+    text-decoration: underline;
+    color: var(--primary-blue);
+}
+
+/* SDG Section */
+.footer-sdg {
+    background-color: white;
+    padding: var(--spacing-4);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--neutral-gray-200);
+    text-align: center;
+}
+
+.sdg-badges {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-4);
+    margin-bottom: var(--spacing-3);
+    flex-wrap: wrap;
+}
+
+.sdg-badge {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 700;
+    color: white;
+    font-size: var(--font-size-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.sdg-4 {
+    background-color: #C5192D;
+}
+
+/* SDG 4 Red */
+.sdg-10 {
+    background-color: #DD1367;
+}
+
+/* SDG 10 Pink */
+
+.sdg-num {
+    font-size: 1.25em;
+    font-weight: 800;
+}
+
+.impact-message {
+    font-style: italic;
+    color: var(--neutral-gray-800);
+    font-weight: 500;
+}
+
+.footer-bottom {
+    text-align: center;
+    color: var(--neutral-gray-500);
+    font-size: var(--font-size-xs);
+    border-top: 1px solid var(--neutral-gray-200);
+    padding-top: var(--spacing-4);
+}
+
+@media (min-width: 768px) {
+    .footer-main {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .footer-brand {
+        max-width: 50%;
+    }
+
+    .footer-links ul {
+        flex-direction: row;
+        gap: var(--spacing-6);
+    }
+}
