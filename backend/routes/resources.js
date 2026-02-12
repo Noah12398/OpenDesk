@@ -108,7 +108,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // POST /api/resources - Submit new resource
-router.post('/', async (req, res) => {
+router.post('/', authenticateUser, async (req, res) => {
   try {
     const {
       name,
@@ -159,7 +159,8 @@ router.post('/', async (req, res) => {
       });
     }
     
-    // Insert resource with Pending status
+    // Insert resource with Pending status and properly bypass RLS if using service key
+    // We explicitly set user_id and submitted_by from the authenticated request
     const { data, error } = await supabase
       .from('resources')
       .insert([{
@@ -173,8 +174,10 @@ router.post('/', async (req, res) => {
         cost: cost || 'Free',
         contact: contact || null,
         description: description || null,
-        submitted_by: submitted_by || 'Anonymous',
-        status: 'Pending'
+        status: 'Pending',
+        // Explicitly set user details from auth middleware
+        user_id: req.user.id,
+        submitted_by: req.user.email || submitted_by || 'Anonymous'
       }])
       .select()
       .single();

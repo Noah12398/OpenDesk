@@ -1,12 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CheckCircle, AlertCircle } from 'lucide-react';
+import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
+import { CheckCircle, AlertCircle, MapPin, Crosshair } from 'lucide-react';
 import Input from '../components/common/Input';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
 import { api } from '../lib/api';
 import { districtCenter } from '../data/mockData';
 import './AddResource.css';
+
+// Component to handle map clicks and location updates
+const LocationMarker = ({ position, setPosition, setAddress }) => {
+  const map = useMapEvents({
+    click: async (e) => {
+      const { lat, lng } = e.latlng;
+      setPosition([lat, lng]);
+      
+      // Reverse geocode to get address
+      try {
+        const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
+        const data = await response.json();
+        if (data && data.display_name) {
+          setAddress(data.display_name);
+        }
+      } catch (error) {
+        console.error('Reverse geocoding failed:', error);
+      }
+    },
+  });
+
+  // Fly to position when it changes programmatically (e.g. GPS)
+  useEffect(() => {
+    if (position) {
+      map.flyTo(position, map.getZoom());
+    }
+  }, [position, map]);
+
+  return position ? <Marker position={position} /> : null;
+};
 
 const AddResource = () => {
   const navigate = useNavigate();
@@ -21,11 +52,32 @@ const AddResource = () => {
     facilities: [],
     cost: 'Free'
   });
+  
+  // Default to district center, but try to get real location
+  const [coordinates, setCoordinates] = useState(districtCenter);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [loadingLocation, setLoadingLocation] = useState(false);
 
   const categories = ["Libraries", "Study Centers", "Free Tuition NGOs", "Public Wi-Fi", "Book Banks", "Community Classrooms"];
   const facilitiesOptions = ["Wi-Fi", "Seating", "Books", "Electricity", "Water", "Computers"];
+
+  // Get user's current location on load
+  useEffect(() => {
+    if (navigator.geolocation) {
+      setLoadingLocation(true);
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setCoordinates([position.coords.latitude, position.coords.longitude]);
+          setLoadingLocation(false);
+        },
+        (error) => {
+          console.error("Error getting location:", error);
+          setLoadingLocation(false);
+        }
+      );
+    }
+  }, []);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -41,16 +93,35 @@ const AddResource = () => {
     });
   };
 
+  const setAddressFromMap = (address) => {
+    setFormData(prev => ({ ...prev, address }));
+  };
+
+  const getCurrentLocation = () => {
+    if (navigator.geolocation) {
+      setLoadingLocation(true);
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const newPos = [position.coords.latitude, position.coords.longitude];
+          setCoordinates(newPos);
+          setLoadingLocation(false);
+        },
+        (error) => {
+          alert("Could not get your location. Please check browser permissions.");
+          setLoadingLocation(false);
+        }
+      );
+    } else {
+      alert("Geolocation is not supported by your browser.");
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Mock coordinates generation (random offset from center for demo)
-    // In a real app, we would use a Geocoding API here
-    const mockLat = districtCenter[0] + (Math.random() - 0.5) * 0.05;
-    const mockLng = districtCenter[1] + (Math.random() - 0.5) * 0.05;
-
     try {
+      // Use the coordinates selected on the map
       await api.submitResource({
         name: formData.name,
         category: formData.category,
@@ -61,12 +132,13 @@ const AddResource = () => {
         description: formData.description,
         facilities: formData.facilities,
         cost: formData.cost,
-        coordinates: [mockLat, mockLng],
+        coordinates: coordinates,
       });
 
       setIsSuccess(true);
       window.scrollTo(0, 0);
     } catch (error) {
+      console.error('Submission error:', error);
       alert('Error submitting resource: ' + error.message);
     } finally {
       setIsSubmitting(false);
@@ -95,6 +167,7 @@ const AddResource = () => {
                 facilities: [],
                 cost: 'Free'
               });
+              setCoordinates(districtCenter);
             }}>Add Another</Button>
           </div>
         </Card>
@@ -135,6 +208,41 @@ const AddResource = () => {
                   ))}
                 </select>
               </div>
+            </div>
+
+            {/* Map Location Picker */}
+            <div className="form-section">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                <label className="input-label" style={{display: 'flex', alignItems: 'center', gap: '8px', margin: 0}}>
+                  <MapPin size={18} /> Pin Location on Map
+                </label>
+                <button 
+                  type="button" 
+                  onClick={getCurrentLocation}
+                  className="btn-text"
+                  style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.9rem', color: 'var(--primary-blue)' }}
+                >
+                  <Crosshair size={16} /> 
+                  {loadingLocation ? 'Locating...' : 'Use My Location'}
+                </button>
+              </div>
+              
+              <div className="map-picker-container" style={{ height: '300px', marginBottom: '10px', borderRadius: '8px', overflow: 'hidden', border: '1px solid #ddd', position: 'relative' }}>
+                <MapContainer center={coordinates} zoom={13} style={{ height: '100%', width: '100%' }}>
+                  <TileLayer
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                  />
+                  <LocationMarker 
+                    position={coordinates} 
+                    setPosition={setCoordinates}
+                    setAddress={setAddressFromMap}
+                  />
+                </MapContainer>
+              </div>
+              <p className="helper-text" style={{ fontSize: '0.85rem', color: '#666', marginBottom: '20px' }}>
+                Tap on the map to set the exact location. We'll try to auto-fill the address for you.
+              </p>
             </div>
 
             <Input 

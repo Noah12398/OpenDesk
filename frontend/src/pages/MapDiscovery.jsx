@@ -38,6 +38,7 @@ const MapDiscovery = () => {
   const fetchResources = async () => {
     try {
       const response = await api.fetchResources();
+      console.log('Fetched resources:', response.data);
       setResources(response.data || []);
     } catch (error) {
       console.error('Error fetching resources:', error.message);
@@ -129,24 +130,37 @@ const MapDiscovery = () => {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-          {!loading && filteredResources.map(res => (
-            <Marker 
-              key={res.id} 
-              position={res.coordinates}
-              eventHandlers={{
-                click: () => {
-                  setActiveResource(res.id);
-                  setShowList(true); // Show list on mobile when clicked
-                },
-              }}
-            >
-              <Popup>
-                <strong>{res.name}</strong><br />
-                {res.category}<br />
-                {res.address}
-              </Popup>
-            </Marker>
-          ))}
+          {!loading && filteredResources.map(res => {
+            // Validate coordinates
+            const isValidCoordinate = Array.isArray(res.coordinates) && 
+                                     res.coordinates.length === 2 && 
+                                     !isNaN(res.coordinates[0]) && 
+                                     !isNaN(res.coordinates[1]);
+            
+            if (!isValidCoordinate) {
+              console.warn(`Skipping resource ${res.name} (ID: ${res.id}) due to invalid coordinates:`, res.coordinates);
+              return null;
+            }
+
+            return (
+              <Marker 
+                key={res.id} 
+                position={res.coordinates}
+                eventHandlers={{
+                  click: () => {
+                    setActiveResource(res.id);
+                    setShowList(true); // Show list on mobile when clicked
+                  },
+                }}
+              >
+                <Popup>
+                  <strong>{res.name}</strong><br />
+                  {res.category}<br />
+                  {res.address}
+                </Popup>
+              </Marker>
+            );
+          })}
         </MapContainer>
         
         {/* Mobile Toggle Button */}
