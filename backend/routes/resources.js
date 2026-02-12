@@ -24,7 +24,8 @@ router.get('/', async (req, res) => {
     }
     
     if (search) {
-      query = query.or(`name.ilike.%${search}%,address.ilike.%${search}%`);
+      // Search in name, address, or pincode
+      query = query.or(`name.ilike.%${search}%,address.ilike.%${search}%,pincode.ilike.%${search}%`);
     }
     
     const { data, error } = await query.order('created_at', { ascending: false });

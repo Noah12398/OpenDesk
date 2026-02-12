@@ -9,6 +9,9 @@ import AdminDashboard from './pages/AdminDashboard';
 import EmergencyHelp from './pages/EmergencyHelp';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import Privacy from './pages/Privacy';
+import About from './pages/About';
+import Contact from './pages/Contact';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -34,6 +37,9 @@ function App() {
             } 
           />
           <Route path="emergency" element={<EmergencyHelp />} />
+          <Route path="privacy" element={<Privacy />} />
+          <Route path="about" element={<About />} />
+          <Route path="contact" element={<Contact />} />
         </Route>
       </Routes>
     </Router>

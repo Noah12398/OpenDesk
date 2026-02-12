@@ -49,8 +49,10 @@ const MapDiscovery = () => {
 
   // Filter resources
   const filteredResources = resources.filter(res => {
-    const matchesSearch = res.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                          res.address.toLowerCase().includes(searchTerm.toLowerCase());
+    const term = searchTerm.toLowerCase();
+    const matchesSearch = res.name.toLowerCase().includes(term) || 
+                          res.address.toLowerCase().includes(term) ||
+                          (res.pincode && res.pincode.includes(term));
     const matchesCategory = selectedCategory === 'All' || res.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });

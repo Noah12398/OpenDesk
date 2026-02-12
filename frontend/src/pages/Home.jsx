@@ -75,26 +75,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Impact Section */}
-      <section className="section impact-section">
-        <div className="container">
-          <h2 className="section-title">Our Impact</h2>
-          <div className="impact-grid">
-            <div className="impact-item">
-              <span className="impact-number">1,200+</span>
-              <span className="impact-label">Study Spaces Mapped</span>
-            </div>
-            <div className="impact-item">
-              <span className="impact-number">50+</span>
-              <span className="impact-label">Districts Covered</span>
-            </div>
-            <div className="impact-item">
-              <span className="impact-number">10k+</span>
-              <span className="impact-label">Students Helped</span>
-            </div>
-          </div>
-        </div>
-      </section>
+    
 
       {/* CTA Section */}
       <section className="cta-section">
