@@ -13,6 +13,7 @@ app.set("trust proxy", 1);
 app.use((req, res, next) => {
   const origin = req.headers.origin;
 
+  // Allow frontend domains
   if (
     origin &&
     (
@@ -20,14 +21,23 @@ app.use((req, res, next) => {
       origin.includes("localhost")
     )
   ) {
-    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.header("Access-Control-Allow-Origin", origin);
   }
 
-  res.setHeader("Access-Control-Allow-Credentials", "true");
-  res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type,Authorization");
+  res.header("Access-Control-Allow-Credentials", "true");
 
-  // handle preflight
+  // 🔥 IMPORTANT — include PATCH
+  res.header(
+    "Access-Control-Allow-Methods",
+    "GET,POST,PUT,DELETE,PATCH,OPTIONS"
+  );
+
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization"
+  );
+
+  // Handle preflight
   if (req.method === "OPTIONS") {
     return res.sendStatus(204);
   }
