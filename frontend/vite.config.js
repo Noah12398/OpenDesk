@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:5003',
+        target: 'https://opendesk-5i39.onrender.com/',
         changeOrigin: true,
       }
     }
