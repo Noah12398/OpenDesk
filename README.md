@@ -118,7 +118,9 @@ The app will be available at:
 ---
 
 ## 🔐 Authentication Setup
-
+Already existing admin:
+email-darwinmaxwell05@gmail.com
+password-Qwerty123?
 ### Create Your First Admin User
 
 1. **Sign up** through the app at http://localhost:5173/signup
